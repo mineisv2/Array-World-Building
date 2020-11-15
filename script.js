@@ -55,31 +55,21 @@ function moveUp(){
 
 function move(e){
 	//console.log(e.keyCode);
-	ctx.beginPath();
 	buildArray();
-    world[enimyPos[1]][enimyPos[0]] = 2;
+  world[enimyPos[1]][enimyPos[0]] = 2;
 	ctx.clearRect(0, 0, width, height);
-	if(e.keyCode == 38){
-		if(world[playerPos[1]-1][playerPos[0]] == 0){
-		    console.log("Here");
-		    playerPos[1] -= 1;
-		    world[playerPos[1]][playerPos[0]] = 1;
-	    }else if(world[playerPos[1]-1][playerPos[0]] == 2){
-	    	console.log("blocked");
-	    }
-	}else if(e.keyCode == 40){
+	if(e.keyCode == 38 && world[playerPos[1]-1][playerPos[0]] == 0){
+		playerPos[1] -= 1;
+	}else if(e.keyCode == 40 && world[playerPos[1]+1][playerPos[0]] == 0){
 		playerPos[1] += 1;
-		world[playerPos[1]][playerPos[0]] = 1;
-	}else if(e.keyCode == 37){
+	}else if(e.keyCode == 37 && world[playerPos[1]][playerPos[0]-1] == 0){
 		playerPos[0] -= 1;
-		world[playerPos[1]][playerPos[0]] = 1;
-	}else if(e.keyCode == 39){
+	}else if(e.keyCode == 39 && world[playerPos[1]][playerPos[0]+1] == 0){
 		playerPos[0] += 1;
-		world[playerPos[1]][playerPos[0]] = 1;
 	}
-	
+	world[playerPos[1]][playerPos[0]] = 1;
 	drawWorld();
-	//e.preventDefault();
+	e.preventDefault();
 }
 
 
