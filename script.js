@@ -13,13 +13,16 @@ var blWidth = playerSize;
 
 var world = [];
 
-buildArray();
+playerPos = [1, 1];
 
-playerPos = [1, 1]
-world[playerPos[1]][playerPos[0]] = 1;
-enimyPos = [5, 5]
-world[enimyPos[1]][enimyPos[0]] = 2;
+objects = [[5, 5], [4, 4]];
+//world[enimyPos[1]][enimyPos[0]] = 2;
 
+function putObjs(){
+	for(var i = 0; i < objects.length; i++){
+		world[objects[i][1]][objects[i][0]] = 2;
+	}
+}
 
 function buildArray(){
 	for(var row = 0; row < rows; row++){
@@ -49,14 +52,11 @@ function drawWorld(){
 	}
 }
 
-function moveUp(){
-	
-}
-
 function move(e){
 	//console.log(e.keyCode);
 	buildArray();
-  world[enimyPos[1]][enimyPos[0]] = 2;
+	putObjs();
+  //world[enimyPos[1]][enimyPos[0]] = 2;
 	ctx.clearRect(0, 0, width, height);
 	if(e.keyCode == 38 && world[playerPos[1]-1][playerPos[0]] == 0){
 		playerPos[1] -= 1;
@@ -75,4 +75,7 @@ function move(e){
 
 //////Program\\\\\
 addEventListener("keydown", move);
+buildArray();
+world[playerPos[1]][playerPos[0]] = 1;
+putObjs();
 drawWorld();
