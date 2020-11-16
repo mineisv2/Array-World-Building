@@ -77,8 +77,7 @@ function component(width, height, color, x, y) {
 
 //Player movement
 
-//will move the playerPos in the array
-//status: not started
+//detects if the player will hit an object in front of them
 function collisionMove(e){
 	if(e == 38 && world[playerPos[1]-1][playerPos[0]] == 0){
 		player.y -= speed;
@@ -92,7 +91,6 @@ function collisionMove(e){
 }
 
 //will move the player freely in the world
-//status: only moves in grids
 function move(e){
 	buildArray();
 	putObjs();
@@ -112,6 +110,7 @@ function move(e){
 	e.preventDefault();
 }
 
+//round the positon of the player to the grid and puts the pos in the world array
 function playerGrid(){
 	console.log(Math.round(player.x/playerSize), Math.round(player.y/playerSize));
 	playerPos = [Math.round(player.x/playerSize), Math.round(player.y/playerSize)];
