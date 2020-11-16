@@ -4,6 +4,8 @@ var ctx = c.getContext("2d");
 myCanvas.width = width = 1200;
 myCanvas.height = height = 600;
 
+var speed = 10;
+
 var playerSize = 40;
 
 var rows = height/playerSize;
@@ -11,9 +13,13 @@ var columns = width/playerSize;
 
 var world = [];
 
-var playerPos = [1, 1];
+var playerPos = [0, 0];
 
 var objects = [[5, 5], [4, 4]];
+
+function start(){
+	player = new component(playerSize, playerSize, "red", playerPos[1]*playerSize, playerPos[0]*playerSize);
+}
 
 //functions for making the world with all objects
 
@@ -43,7 +49,7 @@ function drawWorld(){
 				ctx.rect(column*playerSize, row*playerSize, playerSize, playerSize);
 				ctx.stroke();
 			}else if(world[row][column] == 1){
-				ctx.fillStyle = "#FF0000";
+				ctx.fillStyle = "#808080";
 				ctx.fillRect(column*playerSize, row*playerSize, playerSize, playerSize);
 			}else if(world[row][column] == 2){
 				ctx.fillStyle = "#00FF00";
@@ -58,8 +64,8 @@ function drawWorld(){
 function component(width, height, color, x, y) {
   this.width = width;
   this.height = height;
-  this.x = x + worldOffX;
-  this.y = y + worldOffY;
+  this.x = x;
+  this.y = y;
   ctx.fillStyle = color;
   ctx.fillRect(this.x, this.y, this.width, this.height);
   this.update = function(){
@@ -73,49 +79,49 @@ function component(width, height, color, x, y) {
 
 //will move the playerPos in the array
 //status: not started
-function moveArray(e){
-	//console.log(e.keyCode);
-	buildArray();
-	putObjs();
-	ctx.clearRect(0, 0, width, height);
-	if(e.keyCode == 38 && world[playerPos[1]-1][playerPos[0]] == 0){
-		playerPos[1] -= 1;
-	}else if(e.keyCode == 40 && world[playerPos[1]+1][playerPos[0]] == 0){
-		playerPos[1] += 1;
-	}else if(e.keyCode == 37 && world[playerPos[1]][playerPos[0]-1] == 0){
-		playerPos[0] -= 1;
-	}else if(e.keyCode == 39 && world[playerPos[1]][playerPos[0]+1] == 0){
-		playerPos[0] += 1;
+function collisionMove(e){
+	if(e == 38 && world[playerPos[1]-1][playerPos[0]] == 0){
+		player.y -= speed;
+	}else if(e == 40 && world[playerPos[1]+1][playerPos[0]] == 0){
+		player.y += speed;
+	}else if(e == 37 && world[playerPos[1]][playerPos[0]-1] == 0){
+		player.x -= speed;
+	}else if(e == 39 && world[playerPos[1]][playerPos[0]+1] == 0){
+		player.x += speed;
 	}
-	world[playerPos[1]][playerPos[0]] = 1;
-	drawWorld();
-	e.preventDefault();
 }
 
 //will move the player freely in the world
 //status: only moves in grids
 function move(e){
-	//console.log(e.keyCode);
 	buildArray();
 	putObjs();
 	ctx.clearRect(0, 0, width, height);
-	if(e.keyCode == 38 && world[playerPos[1]-1][playerPos[0]] == 0){
-		playerPos[1] -= 1;
-	}else if(e.keyCode == 40 && world[playerPos[1]+1][playerPos[0]] == 0){
-		playerPos[1] += 1;
-	}else if(e.keyCode == 37 && world[playerPos[1]][playerPos[0]-1] == 0){
-		playerPos[0] -= 1;
-	}else if(e.keyCode == 39 && world[playerPos[1]][playerPos[0]+1] == 0){
-		playerPos[0] += 1;
+	if(e.keyCode == 38){
+		collisionMove(e.keyCode);
+	}else if(e.keyCode == 40){
+		collisionMove(e.keyCode);
+	}else if(e.keyCode == 37){
+		collisionMove(e.keyCode);
+	}else if(e.keyCode == 39){
+		collisionMove(e.keyCode);
 	}
-	world[playerPos[1]][playerPos[0]] = 1;
+	playerGrid();
 	drawWorld();
+	player.update();
 	e.preventDefault();
 }
 
+function playerGrid(){
+	console.log(Math.round(player.x/playerSize), Math.round(player.y/playerSize));
+	playerPos = [Math.round(player.x/playerSize), Math.round(player.y/playerSize)];
+	world[playerPos[1]][playerPos[0]] = 1;
+}
+
+
 //////Program\\\\\
 addEventListener("keydown", move);
+start();
 buildArray();
-world[playerPos[1]][playerPos[0]] = 1;
 putObjs();
 drawWorld();
